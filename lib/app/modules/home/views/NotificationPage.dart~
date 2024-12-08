@@ -1,0 +1,126 @@
+import 'package:flutter/material.dart';
+
+class NotificationPage extends StatefulWidget {
+  final List<Map<String, String>> notifications;
+
+  // Menerima list notifikasi sebagai parameter
+  NotificationPage({Key? key, required this.notifications}) : super(key: key);
+
+  @override
+  _NotificationPageState createState() => _NotificationPageState();
+}
+
+class _NotificationPageState extends State<NotificationPage> {
+  late List<Map<String, String>> _notifications;
+
+  @override
+  void initState() {
+    super.initState();
+    _notifications = List.from(widget.notifications); // Menyalin notifikasi awal
+  }
+
+  // Fungsi untuk menghapus semua notifikasi
+  void _clearNotifications() {
+    setState(() {
+      _notifications.clear();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Notifikasi',
+          style: TextStyle(color: Colors.black87),
+        ),
+        backgroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.black87),
+        elevation: 1,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.delete, color: Colors.black87),
+            onPressed: _notifications.isNotEmpty
+                ? _clearNotifications
+                : null, // Nonaktifkan tombol jika tidak ada notifikasi
+          ),
+        ],
+      ),
+      body: _notifications.isNotEmpty
+          ? ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: _notifications.length,
+        itemBuilder: (context, index) {
+          final notification = _notifications[index];
+          return _buildNotificationCard(notification);
+        },
+      )
+          : const Center(
+        child: Text(
+          'Tidak ada notifikasi baru',
+          style: TextStyle(fontSize: 16, color: Colors.black54),
+        ),
+      ),
+    );
+  }
+
+  // Fungsi untuk membuat kartu notifikasi
+  Widget _buildNotificationCard(Map<String, String> notification) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          const Icon(
+            Icons.notifications,
+            color: Colors.blueAccent,
+            size: 40,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  notification["title"] ?? "Judul Tidak Tersedia",
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  notification["body"] ?? "Isi pesan tidak tersedia",
+                  style: const TextStyle(
+                    fontSize: 15,
+                    color: Colors.black54,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  notification["time"] ?? "Waktu tidak tersedia",
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

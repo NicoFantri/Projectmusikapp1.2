@@ -1,0 +1,11 @@
+// auth_binding.dart
+import 'package:get/get.dart';
+import '../controllers/auth_controller.dart';
+
+class AuthBinding extends Bindings {
+  @override
+  void dependencies() {
+    // Gunakan lazyPut atau put, tapi pastikan hanya dipanggil sekali
+    Get.lazyPut<AuthController>(() => AuthController());
+  }
+}
